@@ -1,9 +1,11 @@
 #include <iostream>
 #include "Task.h"
+#include <fstream>
 using namespace std;
 
 
 int global_task_id = 0;
+vector<Task> tasks;
 
 void showUsage()
 {
@@ -17,6 +19,25 @@ void showUsage()
               << "\t task-cli list done\n"
               << "\t task-cli list todo\n"
               << "\t task-cli list in-progress\n";
+}
+
+void get_tasks_file()
+{
+    string filename = "tasks.txt";
+
+    ofstream outfile(filename, ios::app);
+    if (!outfile.is_open())
+    {
+        cerr << "Error opening file " << filename << endl;
+        exit(1);
+    }
+
+    for (Task task : tasks)
+    {
+        outfile << task.get_description() << endl;
+    }
+
+    outfile.close();
 }
 
 int main(const int argc, char* argv[]) {
@@ -48,6 +69,9 @@ int main(const int argc, char* argv[]) {
         cout << "Task added successfully (ID: " << task_id << ")" << endl;
 
         new_task.display_task();
+        tasks.push_back(new_task);
+
+        get_tasks_file();
     }
 
 
