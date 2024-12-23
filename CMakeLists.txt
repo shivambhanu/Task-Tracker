@@ -3,4 +3,6 @@ project(Task_Tracker)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(Task_Tracker main.cpp)
+add_executable(Task_Tracker main.cpp
+        Task.cpp
+        Task.h)

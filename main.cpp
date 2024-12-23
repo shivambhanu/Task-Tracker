@@ -1,8 +1,13 @@
 #include <iostream>
+#include "Task.h"
+using namespace std;
+
+
+int global_task_id = 0;
 
 void showUsage()
 {
-    std::cout << "Usage:\n"
+    cout << "Usage:\n"
               << "\t task-cli add <description>\n"
               << "\t task-cli update <task-id> <description>\n"
               << "\t task-cli delete <task-id>\n"
@@ -20,91 +25,106 @@ int main(const int argc, char* argv[]) {
 
     if (argc < 3)
     {
-        std::cout << "Error: Command not provided!\n";
+        cout << "Error: Command not provided!\n";
         showUsage();
         return 1;
     }
 
-    std::string command = argv[2];
+    string command = argv[2];
     if (command == "add")
     {
         if (argc < 4)
         {
-            std::cout << "Error: Description not provided for add command!\n";
+            cout << "Error: Description not provided for add command!\n";
             return 1;
         }
-        std::string description = argv[3];
-        std::cout << "Adding task: " << description << std::endl;
-    } else if (command == "update")
-    {
-        if (argc < 5)
-        {
-            std::cout << "Error: task-id OR Description is not provided for update command!\n";
-            return 1;
-        }
-        std::string task_id = argv[3];
-        std::string description = argv[4];
+        string description = argv[3];
+        int task_id = global_task_id++;
 
-        std::cout << "Updating task: " << task_id << " by: " << description << std::endl;
-    } else if (command == "delete")
-    {
-        if (argc < 4)
-        {
-            std::cout << "Error: task-id is not provided for delete command!\n";
-            return 1;
-        }
-        std::string task_id = argv[3];
-        std::cout << "Deleting task: " << task_id << std::endl;
-        //TODO: fetch the task description and print it also
-    } else if (command == "mark-in-progress")
-    {
-        if (argc < 4)
-        {
-            std::cout << "Error: task-id is not provided for mark-in-progress command!\n";
-            return 1;
-        }
-        std::string task_id = argv[3];
-        std::cout << "Marking task: " << task_id  << " in progress."<< std::endl;
-    } else if (command == "mark-done")
-    {
-        if (argc < 4)
-        {
-            std::cout << "Error: task-id is not provided for mark-done command!\n";
-            return 1;
-        }
-        std::string task_id = argv[3];
-        std::cout << "Marking task: " << task_id << "as done!" << std::endl;
-    } else if (command == "list")
-    {
-        if (argc < 4)
-        {
-            std::cout << "Listing all tasks:" << std::endl;
-        } else
-        {
-            std::string list_command = argv[3];
+        auto now = chrono::system_clock::now();
+        string curr_time = format("{:%Y-%m-%d %H:%M:%S}", now);
 
-            if (list_command == "done")
-            {
-                std::cout << "Listing all DONE tasks" << std::endl;
-            } else if (list_command == "todo")
-            {
-                std::cout << "Listing all pending tasks" << std::endl;
-            } else if (list_command == "in-progress")
-            {
-                std::cout << "Listing tasks that are in progress" << std::endl;
-            } else
-            {
-                std::cout << "Error: Command not valid -- here!\n";
-                showUsage();
-                return 1;
-            }
-        }
-    } else
-    {
-        std::cout << "Error: Command not valid!\n";
-        showUsage();
-        return 1;
+        Task new_task(task_id, description, "todo", curr_time, curr_time);
+        cout << "Task added successfully (ID: " << task_id << ")" << endl;
+
+        new_task.display_task();
     }
+
+
+
+
+
+
+    // else if (command == "update")
+    // {
+    //     if (argc < 5)
+    //     {
+    //         cout << "Error: task-id OR Description is not provided for update command!\n";
+    //         return 1;
+    //     }
+    //     string task_id = argv[3];
+    //     string description = argv[4];
+    //
+    //     cout << "Updating task: " << task_id << " by: " << description << endl;
+    // } else if (command == "delete")
+    // {
+    //     if (argc < 4)
+    //     {
+    //         cout << "Error: task-id is not provided for delete command!\n";
+    //         return 1;
+    //     }
+    //     string task_id = argv[3];
+    //     cout << "Deleting task: " << task_id << endl;
+    //     //TODO: fetch the task description and print it also
+    // } else if (command == "mark-in-progress")
+    // {
+    //     if (argc < 4)
+    //     {
+    //         cout << "Error: task-id is not provided for mark-in-progress command!\n";
+    //         return 1;
+    //     }
+    //     string task_id = argv[3];
+    //     cout << "Marking task: " << task_id  << " in progress."<< endl;
+    // } else if (command == "mark-done")
+    // {
+    //     if (argc < 4)
+    //     {
+    //         cout << "Error: task-id is not provided for mark-done command!\n";
+    //         return 1;
+    //     }
+    //     string task_id = argv[3];
+    //     cout << "Marking task: " << task_id << "as done!" << endl;
+    // } else if (command == "list")
+    // {
+    //     if (argc < 4)
+    //     {
+    //         cout << "Listing all tasks:" << endl;
+    //     } else
+    //     {
+    //         string list_command = argv[3];
+    //
+    //         if (list_command == "done")
+    //         {
+    //             cout << "Listing all DONE tasks" << endl;
+    //         } else if (list_command == "todo")
+    //         {
+    //             cout << "Listing all pending tasks" << endl;
+    //         } else if (list_command == "in-progress")
+    //         {
+    //             cout << "Listing tasks that are in progress" << endl;
+    //         } else
+    //         {
+    //             cout << "Error: Command not valid -- here!\n";
+    //             showUsage();
+    //             return 1;
+    //         }
+    //     }
+    // } else
+    // {
+    //     cout << "Error: Command not valid!\n";
+    //     showUsage();
+    //     return 1;
+    // }
 
     return 0;
 }
